@@ -16,6 +16,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 using Microsoft.WindowsAzure.MobileServices;
+using System.Diagnostics;
 // The Blank Application template is documented at http://go.microsoft.com/fwlink/?LinkId=391641
 
 namespace GroupLocator
@@ -40,6 +41,12 @@ namespace GroupLocator
         {
             this.InitializeComponent();
             this.Suspending += this.OnSuspending;
+            this.UnhandledException += CurrentOnUnhandledException;
+        }
+
+        private void CurrentOnUnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            Debug.WriteLine("Unhandled exception");
         }
 
         /// <summary>
@@ -63,6 +70,7 @@ namespace GroupLocator
             // just ensure that the window is active
             if (rootFrame == null)
             {
+         
                 // Create a Frame to act as the navigation context and navigate to the first page
                 rootFrame = new Frame();
 

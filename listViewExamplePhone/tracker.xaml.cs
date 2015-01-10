@@ -1,11 +1,15 @@
 ﻿using GroupLocator.Common;
 using Microsoft.WindowsAzure.MobileServices;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.Devices.Geolocation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -41,10 +45,9 @@ namespace GroupLocator
             this.navigationHelper.LoadState += this.NavigationHelper_LoadState;
             this.navigationHelper.SaveState += this.NavigationHelper_SaveState;
 
-            map.Visibility = Visibility.Collapsed;
-            memberList.Visibility = Visibility.Visible;
             memberList.DataContext = myMembers;
             fetchMyMembers();
+            renderMapView();
         }
 
         public async void fetchMyMembers()
@@ -62,8 +65,13 @@ namespace GroupLocator
                     .Where(user => user.emailId == m.emailId)
                     .ToCollectionAsync();
 
-                myMembers.Add(new Member(userItems[0].userName,  userItems[0].latitude.ToString()+", "+userItems[0].longitude.ToString(),
-                    userItems[0].latitude, userItems[0].longitude, userItems[0].lastSeen.ToString()));
+                //string location = await FindLocationFromLatLong(userItems[0].latitude, userItems[0].longitude);
+                string location = await FindLocationFromLatLong(19.133725, 72.912817);
+                string timestamp = String.Format("{0:m}", userItems[0].lastSeen);
+                timestamp += ", "+String.Format("{0:t}", userItems[0].lastSeen);
+
+                myMembers.Add(new Member(userItems[0].userName,  location,
+                    userItems[0].latitude, userItems[0].longitude, timestamp));
             }
 
         }
@@ -147,32 +155,68 @@ namespace GroupLocator
                 Latitude = m.latitude,
                 Longitude = m.longitude
             });
+            
             MapIcon1.NormalizedAnchorPoint = new Point(0.5, 1.0);
             MapIcon1.Title = m.userName;
             MapControl1.MapElements.Add(MapIcon1);
         }
 
-        private void mapView_Click(object sender, RoutedEventArgs e)
+        private void renderMapView()
         {
-            memberList.Visibility = Visibility.Collapsed;
-            map.Visibility = Visibility.Visible;
-            //MapControl1.Center = 
-            //    new Geopoint(new BasicGeoposition()
-            //    {
-            //        Latitude = GlobalVars.currentUser.latitude,
-            //        Longitude = GlobalVars.currentUser.longitude
-            //    });
-            //MapControl1.ZoomLevel = 12;
-            //MapControl1.LandmarksVisible = true;
-            //foreach (Member m in myMembers){
-            //    addPin(m);
-            //}
+            
+            MapControl1.Center =
+                new Geopoint(new BasicGeoposition()
+                {
+                    Latitude = 18.9750,
+                    Longitude = 72.8258
+                });
+            MapControl1.ZoomLevel = 12;
+            MapControl1.LandmarksVisible = true;
+            foreach (Member m in myMembers)
+            {
+                addPin(m);
+            }         
         }
 
         private void listView_Click(object sender, RoutedEventArgs e)
         {
-            memberList.Visibility = Visibility.Visible;
-            map.Visibility = Visibility.Collapsed;
+        }
+
+        public static async Task<string> FindLocationFromLatLong(double latitude, double longitude)
+        {
+            Debug.WriteLine("Fetching...");
+
+            string loc = String.Empty;
+            string bingMapsKey = "AuNMbb3S69zU1wAhAH7rbXpzlYXNypGSGadNH0k6RvPdxctH8MgWXUr-Jdb8GXwj";
+            if (latitude != 0 || longitude != 0)
+            {
+                try
+                {
+                    string url = "http://dev.virtualearth.net/REST/v1/Locations/" + latitude + "," + longitude + "?key=" + bingMapsKey;
+
+                    HttpClient httpClient = new HttpClient();
+                    var response = await httpClient.GetAsync(url);
+                    var json = await response.Content.ReadAsStringAsync();
+
+                    JObject root = JObject.Parse(json);
+                    JArray resourceSets = (JArray)root["resourceSets"];
+                    JArray resources = (JArray)resourceSets[0]["resources"];
+                    
+                    JToken addressLine = resources[0]["address"]["addressLine"];
+                    JToken adminDistrict = resources[0]["address"]["adminDistrict"];
+                    JToken countryRegion = resources[0]["address"]["countryRegion"];
+                    JToken city = resources[0]["address"]["locality"];
+
+
+                    loc = addressLine.ToString() + ", " + adminDistrict.ToString() + ", " + city.ToString() + ", " + countryRegion.ToString();
+
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+            return loc;
         }
     }
 }

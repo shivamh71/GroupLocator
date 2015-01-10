@@ -39,8 +39,8 @@
                         <ListView  x:Name="GroupItems" ItemsSource="{Binding}" SelectionChanged="GroupClicked">
                             <ListView.ItemTemplate>
                                 <DataTemplate >
-                                    <StackPanel Orientation="Horizontal" >
-                                        <TextBlock FontSize="20" Text="{Binding groupName}" />
+                                    <StackPanel Orientation="Horizontal" Margin="0,15" >
+                                        <TextBlock FontSize="40" Text="{Binding groupName}" />
                                     </StackPanel>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
@@ -54,7 +54,7 @@
                         <ListView  x:Name="InviteItems" ItemsSource="{Binding}" SelectionChanged="InviteClicked">
                             <ListView.ItemTemplate>
                                 <DataTemplate >
-                                    <Grid>
+                                    <Grid Margin="0,15">
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto"/>
                                             <RowDefinition Height="Auto"/>
@@ -64,8 +64,8 @@
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="*"/>
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Grid.Row="0" Grid.ColumnSpan="2" FontSize="20" Text="{Binding groupName}" />
-                                        <TextBlock Grid.Row="1" Grid.ColumnSpan="2" FontSize="15" Text="{Binding senderEmailId}" />
+                                        <TextBlock Grid.Row="0" Grid.ColumnSpan="2" FontSize="40" Text="{Binding groupName}" />
+                                        <TextBlock Grid.Row="1" Grid.ColumnSpan="2" FontSize="35" Text="{Binding senderEmailId}" />
                                     </Grid>
                                 </DataTemplate>
                             </ListView.ItemTemplate>

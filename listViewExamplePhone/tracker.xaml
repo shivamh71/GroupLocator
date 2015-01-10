@@ -29,45 +29,48 @@
         </StackPanel>
 
         <!--TODO: Content should be placed within the following grid-->
-        <Grid Grid.Row="1" x:Name="ContentRoot" Margin="19,9.5,19,0">
-            
-            <ListView  x:Name="memberList"  ItemsSource="{Binding}" >
-                <ListView.ItemTemplate>
-                    <DataTemplate >
-                        <Grid Margin="10">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="1.5*"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Row="0" FontSize="20" Text="{Binding userName}" />
-                            <TextBlock Grid.Row="0" Grid.Column="1" FontSize="20" Text="{Binding lastSeen}" HorizontalAlignment="Right" />
-                            <TextBlock Grid.Row="1" Grid.ColumnSpan="2" FontSize="20" Text="{Binding location}" />
-                        </Grid>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-
-            <Grid Grid.Row="1" x:Name="map" Margin="1,1,1,0">
-                <!--<Button Margin="49,93,0,351" Click="getLocation" Content="Get Location"></Button>-->
-                <Maps:MapControl
-                x:Name="MapControl1"
-                MapServiceToken="PBhiiCELc6lVoYkIQbfHAw"
-                Height="560"
-                Margin="0,0,0,0" />
-            </Grid>
-
+        <Grid Grid.Row="1" x:Name="ContentRoot" >
+            <Pivot>
+                <PivotItem Header="List View">
+                    <Grid x:Name="memberGrid">
+                        <ListView  x:Name="memberList"  ItemsSource="{Binding}" >
+                            <ListView.ItemTemplate>
+                                <DataTemplate >
+                                    <Grid Margin="20">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1.5*"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Row="0" FontSize="40" Text="{Binding userName}" />
+                                        <TextBlock Grid.Row="0" Grid.Column="1" FontSize="20" Text="{Binding lastSeen}" TextWrapping="Wrap" HorizontalAlignment="Right" />
+                                        <TextBlock Grid.Row="1" Grid.ColumnSpan="2" FontSize="20" Text="{Binding location}" TextWrapping="Wrap" />
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </Grid>
+                </PivotItem>
+                <PivotItem Header="Map View">
+                    <Grid x:Name="map" >
+                        <Maps:MapControl
+                        x:Name="MapControl1"
+                        MapServiceToken="PBhiiCELc6lVoYkIQbfHAw"
+                        Height="560"
+                        Margin="0,0,0,0" />
+                    </Grid>
+                </PivotItem>
+            </Pivot>
         </Grid>
         
     </Grid>
     <Page.BottomAppBar>
         <CommandBar>
-            <AppBarButton Label="LIST" Icon="List" Click="listView_Click"/>
-            <AppBarButton Label="MAP" Icon="Map" Click="mapView_Click"/>
+            <AppBarButton Label="Add" Icon="Add" Click="listView_Click"/>
         </CommandBar>
     </Page.BottomAppBar>
 </Page>
