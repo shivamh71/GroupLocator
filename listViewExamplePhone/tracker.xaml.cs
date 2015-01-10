@@ -110,7 +110,7 @@ namespace GroupLocator
 
         private void mapView_Click(object sender, RoutedEventArgs e)
         {
-            
+
         }
 
         private void listView_Click(object sender, RoutedEventArgs e)
