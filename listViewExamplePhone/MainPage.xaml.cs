@@ -18,7 +18,7 @@ using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=391641
 
-namespace listViewExamplePhone
+namespace GroupLocator
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
@@ -32,7 +32,7 @@ namespace listViewExamplePhone
         {
             this.InitializeComponent();
             Groups = new ObservableCollection<GroupClass>();
-            GroupItems.DataContext = Groups;
+            //GroupItems.DataContext = Groups;
             this.NavigationCacheMode = NavigationCacheMode.Required;
             
         }
@@ -63,6 +63,29 @@ namespace listViewExamplePhone
         private void GroupClicked(object sender, SelectionChangedEventArgs e)
         {
             Debug.WriteLine("Selected: {0}", e.AddedItems[0]);
+            //Frame.Navigate(typeof(MainPage));
+        }
+
+        private void clickFunction(object sender, RoutedEventArgs e)
+        {
+            //t1.Text = "Text is changed";
+
+        }
+
+        private void password_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void signInButton_Click(object sender, RoutedEventArgs e)
+        {
+            Debug.WriteLine("cliscsvc cked!");
+
+        }
+
+        private void signUpButton_Click(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof("signUpPage"));
         }
     }
 }
