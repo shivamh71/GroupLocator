@@ -23,12 +23,12 @@ namespace GroupLocator
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class signUpPage : Page
+    public sealed partial class addGroup : Page
     {
         private NavigationHelper navigationHelper;
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
 
-        public signUpPage()
+        public addGroup()
         {
             this.InitializeComponent();
 
@@ -108,14 +108,19 @@ namespace GroupLocator
 
         #endregion
 
-        private void signUpButton_Click(object sender, RoutedEventArgs e)
+        private void AppBarButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void addGroupAccept_Click(object sender, RoutedEventArgs e)
         {
             Frame.Navigate(typeof(profile));
         }
 
-        private void password_PasswordChanged(object sender, RoutedEventArgs e)
+        private void addGroupCancel_Click(object sender, RoutedEventArgs e)
         {
-
+            Frame.Navigate(typeof(profile));
         }
     }
 }

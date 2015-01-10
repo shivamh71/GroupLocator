@@ -8,7 +8,7 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid x:Name="LayoutRoot" Background="Transparent">
+    <Grid x:Name="LayoutRoot" Background="Black">
         <Grid.ChildrenTransitions>
             <TransitionCollection>
                 <EntranceThemeTransition/>
@@ -39,7 +39,8 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <TextBox x:Name="emailId" PlaceholderText="EmailId" Grid.Row="0" Grid.ColumnSpan="2"></TextBox>
-            <PasswordBox x:Name="password" Grid.Row="1" VerticalAlignment="Center" Grid.ColumnSpan="2" PlaceholderText="Password" PasswordChanged="password_PasswordChanged"/>
+            <PasswordBox x:Name="password" Grid.Row="1" VerticalAlignment="Center" Grid.ColumnSpan="2"
+                         PlaceholderText="Password"/>
             <Button x:Name="signInButton" Content="Sign In" Grid.Row="2" 
                     HorizontalAlignment="Center" VerticalAlignment="Center" Click="signInButton_Click"></Button>
             <Button x:Name="signUpButton" Content="Sign Up" Grid.Row="2" 

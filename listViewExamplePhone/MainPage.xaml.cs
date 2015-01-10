@@ -72,20 +72,15 @@ namespace GroupLocator
 
         }
 
-        private void password_PasswordChanged(object sender, RoutedEventArgs e)
-        {
-
-        }
-
         private void signInButton_Click(object sender, RoutedEventArgs e)
         {
-            Debug.WriteLine("cliscsvc cked!");
+            Frame.Navigate(typeof(profile));
 
         }
 
         private void signUpButton_Click(object sender, RoutedEventArgs e)
         {
-            Frame.Navigate(typeof("signUpPage"));
+            Frame.Navigate(typeof(signUpPage));
         }
     }
 }
