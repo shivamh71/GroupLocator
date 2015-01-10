@@ -95,6 +95,8 @@
       <DependentUpon>GroupInfo.xaml</DependentUpon>
     </Compile>
     <Compile Include="Invite.cs" />
+    <Compile Include="InviteItem.cs" />
+    <Compile Include="Member.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>

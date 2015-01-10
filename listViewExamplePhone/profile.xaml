@@ -28,6 +28,8 @@
         </StackPanel>
 
         <!--TODO: Content should be placed within the following grid-->
+        
+        
         <Grid Grid.Row="1" x:Name="ContentRoot" Margin="10,10,10,10">
             <!--Pivot Control-->
             <Pivot>
@@ -38,7 +40,7 @@
                             <ListView.ItemTemplate>
                                 <DataTemplate >
                                     <StackPanel Orientation="Horizontal" >
-                                        <TextBlock FontSize="20" Text="{Binding GroupName}" />
+                                        <TextBlock FontSize="20" Text="{Binding groupName}" />
                                     </StackPanel>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
@@ -52,15 +54,25 @@
                         <ListView  x:Name="InviteItems" ItemsSource="{Binding}" SelectionChanged="InviteClicked">
                             <ListView.ItemTemplate>
                                 <DataTemplate >
-                                    <StackPanel Orientation="Horizontal" >
-                                        <TextBlock FontSize="20" Text="{Binding GroupName}" />
-                                        
-                                    </StackPanel>
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Row="0" Grid.ColumnSpan="2" FontSize="20" Text="{Binding groupName}" />
+                                        <TextBlock Grid.Row="1" Grid.ColumnSpan="2" FontSize="15" Text="{Binding senderEmailId}" />
+                                    </Grid>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
                         </ListView>
                     </Grid>
                 </PivotItem>
+                
             </Pivot>
         </Grid>
     </Grid>

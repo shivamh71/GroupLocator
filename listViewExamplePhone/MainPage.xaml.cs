@@ -72,33 +72,45 @@ namespace GroupLocator
 
         private async void signInButton_Click(object sender, RoutedEventArgs e)
         {
+            Debug.WriteLine("Signin clicked");
             bool checkIfExists = false;
 
             GlobalVars.currentUser.emailId = emailId.Text;
-            //GlobalVars.currentUser.password = password.ToString();
+            GlobalVars.currentUser.password = password.ToString();
 
             MobileServiceCollection<User, User> items;
-            items = await GlobalVars.userTable
-                .Where(user => user.emailId == emailId.Text && user.password==password.ToString())
-                .ToCollectionAsync();
 
-            if (items.Count() != 0)
+            try
             {
-                checkIfExists = true;
-            }
+                items = await GlobalVars.userTable
+                       .Where(user => user.emailId == emailId.Text && user.password == password.ToString())
+                       .ToCollectionAsync();
 
-            if (checkIfExists)
-            {
-                Frame.Navigate(typeof(profile));
+                if (items.Count() != 0)
+                {
+                    checkIfExists = true;
+                    //GlobalVars.currentUser = items[0];
+                }
+
+                if (checkIfExists)
+                {
+                    Frame.Navigate(typeof(profile));
+                }
+                else
+                {
+                    Frame.Navigate(typeof(signUpPage));
+                }
             }
-            else
+            catch (Exception ex)
             {
-                Frame.Navigate(typeof(signUpPage));
+                Debug.WriteLine(ex.ToString());
+                
             }
         }
 
         private void signUpButton_Click(object sender, RoutedEventArgs e)
         {
+            Debug.WriteLine("SignUp clicked");
             Frame.Navigate(typeof(signUpPage));
         }
     }

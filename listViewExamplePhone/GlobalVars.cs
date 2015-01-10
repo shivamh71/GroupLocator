@@ -12,6 +12,7 @@ namespace GroupLocator
     public static class GlobalVars
     {
         public static User currentUser;
+        public static string groupId; //group being tracked.
 
         public static IMobileServiceTable<User> userTable = App.MobileService.GetTable<User>();
         public static IMobileServiceTable<Group> groupTable = App.MobileService.GetTable<Group>();

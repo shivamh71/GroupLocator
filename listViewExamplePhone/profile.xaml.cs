@@ -1,13 +1,16 @@
 ﻿using GroupLocator.Common;
+using Microsoft.WindowsAzure.MobileServices;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Graphics.Display;
+using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -30,7 +33,7 @@ namespace GroupLocator
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
 
         public ObservableCollection<Group> myGroups = new ObservableCollection<Group>();
-        public ObservableCollection<Group> myInvites = new ObservableCollection<Group>();
+        public ObservableCollection<InviteItem> myInvites = new ObservableCollection<InviteItem>();
 
         public profile()
         {
@@ -42,6 +45,46 @@ namespace GroupLocator
 
             GroupItems.DataContext = myGroups;
             InviteItems.DataContext = myInvites;
+
+            fetchMyGroups();
+            fetchMyInvites();
+
+        }
+
+        public async void fetchMyGroups()
+        {
+            MobileServiceCollection<Membership, Membership> items;
+            items = await GlobalVars.membershipTable
+                .Where(membership => membership.emailId == GlobalVars.currentUser.emailId)
+                .ToCollectionAsync();
+            foreach (Membership m in items)
+            {
+                MobileServiceCollection<Group, Group> groupItems;
+                groupItems = await GlobalVars.groupTable
+                    .Where(group => group.Id == m.groupId)
+                    .ToCollectionAsync();
+                myGroups.Add(groupItems[0]);
+            }
+
+        }
+
+        public async void fetchMyInvites()
+        {
+            MobileServiceCollection<Invite, Invite> items;
+            items = await GlobalVars.inviteTable
+                .Where(Invite => Invite.receiverEmailId == GlobalVars.currentUser.emailId)
+                .ToCollectionAsync();
+            foreach (Invite inv in items)
+            {
+                Debug.WriteLine(inv.senderEmailId + " " + inv.receiverEmailId+ "\n");
+
+                MobileServiceCollection<Group, Group> groupItems;
+                groupItems = await GlobalVars.groupTable
+                    .Where(group => group.Id == inv.groupId)
+                    .ToCollectionAsync();
+                myInvites.Add(new InviteItem(groupItems[0].Id, groupItems[0].groupName, inv.senderEmailId));
+            }
+
         }
 
         /// <summary>
@@ -115,19 +158,67 @@ namespace GroupLocator
 
         #endregion
 
-        private void InviteClicked(object sender, SelectionChangedEventArgs e)
+        private async void InviteClicked(object sender, SelectionChangedEventArgs e)
         {
-
+            var dialog = new MessageDialog("Do you accept this invite?", "Confirmation");
+            dialog.Commands.Add(new UICommand("Yes", new UICommandInvokedHandler(DeleteCommandHandler), e.AddedItems[0]));
+            dialog.Commands.Add(new UICommand("No", new UICommandInvokedHandler(DeleteCommandHandler), e.AddedItems[0]));
+            await dialog.ShowAsync();
         }
 
+        private async void DeleteCommandHandler(IUICommand command)
+        {
+            var commandLabel = command.Label;
+            InviteItem inv = command.Id as InviteItem;
+            switch (commandLabel)
+            {
+                case "Yes":
+                    Debug.WriteLine("Yes is clicked");
+
+                    Membership m = new Membership(inv.groupId, GlobalVars.currentUser.emailId);
+                    await GlobalVars.membershipTable.InsertAsync(m);
+
+                    break;
+                case "No":
+                    Debug.WriteLine("Yes is clicked");
+                    break;
+            }
+            MobileServiceCollection<Invite, Invite> items;
+            items = await GlobalVars.inviteTable
+                .Where(Invite => Invite.receiverEmailId == GlobalVars.currentUser.emailId && Invite.senderEmailId == inv.senderEmailId && Invite.groupId == inv.groupId)
+                .ToCollectionAsync();
+
+            await GlobalVars.inviteTable.DeleteAsync(items[0]);
+            Frame.Navigate(typeof(profile));
+        }
+
+        // which group is clicked. 
         private void GroupClicked(object sender, SelectionChangedEventArgs e)
         {
-
+            Group groupClicked = e.AddedItems[0] as Group;
+            GlobalVars.groupId = groupClicked.Id;
+            Debug.WriteLine(groupClicked.Id);
+            Frame.Navigate(typeof(tracker));
+            
         }
 
         private void addGroup_Click(object sender, RoutedEventArgs e)
         {
             Frame.Navigate(typeof(addGroup));
         }
+
+        private void acceptInvite_click(object sender, RoutedEventArgs e)
+        {
+            //InviteItem inv = sender as InviteItem;
+            
+
+        }
+
+        private void declineInvite_click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
+
+    
 }

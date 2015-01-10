@@ -1,15 +1,19 @@
 ﻿using GroupLocator.Common;
+using Microsoft.WindowsAzure.MobileServices;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.Devices.Geolocation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Graphics.Display;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Maps;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
@@ -27,6 +31,7 @@ namespace GroupLocator
     {
         private NavigationHelper navigationHelper;
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
+        public ObservableCollection<Member> myMembers = new ObservableCollection<Member>();
 
         public tracker()
         {
@@ -35,6 +40,32 @@ namespace GroupLocator
             this.navigationHelper = new NavigationHelper(this);
             this.navigationHelper.LoadState += this.NavigationHelper_LoadState;
             this.navigationHelper.SaveState += this.NavigationHelper_SaveState;
+
+            map.Visibility = Visibility.Collapsed;
+            memberList.Visibility = Visibility.Visible;
+            memberList.DataContext = myMembers;
+            fetchMyMembers();
+        }
+
+        public async void fetchMyMembers()
+        {
+            MobileServiceCollection<Membership, Membership> items;
+            items = await GlobalVars.membershipTable
+                .Where(membership => membership.groupId == GlobalVars.groupId)
+                .ToCollectionAsync();
+            
+
+            foreach (Membership m in items)
+            {
+                MobileServiceCollection<User, User> userItems;
+                userItems = await GlobalVars.userTable
+                    .Where(user => user.emailId == m.emailId)
+                    .ToCollectionAsync();
+
+                myMembers.Add(new Member(userItems[0].userName,  userItems[0].latitude.ToString()+", "+userItems[0].longitude.ToString(),
+                    userItems[0].latitude, userItems[0].longitude, userItems[0].lastSeen.ToString()));
+            }
+
         }
 
         /// <summary>
@@ -108,14 +139,40 @@ namespace GroupLocator
 
         #endregion
 
+        private void addPin(Member m)
+        {
+            MapIcon MapIcon1 = new MapIcon();
+            MapIcon1.Location = new Geopoint(new BasicGeoposition()
+            {
+                Latitude = m.latitude,
+                Longitude = m.longitude
+            });
+            MapIcon1.NormalizedAnchorPoint = new Point(0.5, 1.0);
+            MapIcon1.Title = m.userName;
+            MapControl1.MapElements.Add(MapIcon1);
+        }
+
         private void mapView_Click(object sender, RoutedEventArgs e)
         {
-
+            memberList.Visibility = Visibility.Collapsed;
+            map.Visibility = Visibility.Visible;
+            //MapControl1.Center = 
+            //    new Geopoint(new BasicGeoposition()
+            //    {
+            //        Latitude = GlobalVars.currentUser.latitude,
+            //        Longitude = GlobalVars.currentUser.longitude
+            //    });
+            //MapControl1.ZoomLevel = 12;
+            //MapControl1.LandmarksVisible = true;
+            //foreach (Member m in myMembers){
+            //    addPin(m);
+            //}
         }
 
         private void listView_Click(object sender, RoutedEventArgs e)
         {
-
+            memberList.Visibility = Visibility.Visible;
+            map.Visibility = Visibility.Collapsed;
         }
     }
 }
