@@ -34,14 +34,31 @@
                 <!--Pivot item one-->
                 <PivotItem Header="Groups">
                     <Grid>
-                        
+                        <ListView  x:Name="GroupItems" ItemsSource="{Binding}" SelectionChanged="GroupClicked">
+                            <ListView.ItemTemplate>
+                                <DataTemplate >
+                                    <StackPanel Orientation="Horizontal" >
+                                        <TextBlock FontSize="20" Text="{Binding GroupName}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
                     </Grid>
                 </PivotItem>
 
                 <!--Pivot item two-->
                 <PivotItem Header="Invites" FontSize="5">
                     <Grid>
-                        
+                        <ListView  x:Name="InviteItems" ItemsSource="{Binding}" SelectionChanged="InviteClicked">
+                            <ListView.ItemTemplate>
+                                <DataTemplate >
+                                    <StackPanel Orientation="Horizontal" >
+                                        <TextBlock FontSize="20" Text="{Binding GroupName}" />
+                                        
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
                     </Grid>
                 </PivotItem>
             </Pivot>
