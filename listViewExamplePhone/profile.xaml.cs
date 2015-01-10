@@ -1,6 +1,7 @@
 ﻿using GroupLocator.Common;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -28,6 +29,9 @@ namespace GroupLocator
         private NavigationHelper navigationHelper;
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
 
+        public ObservableCollection<Group> myGroups = new ObservableCollection<Group>();
+        public ObservableCollection<Group> myInvites = new ObservableCollection<Group>();
+
         public profile()
         {
             this.InitializeComponent();
@@ -35,6 +39,9 @@ namespace GroupLocator
             this.navigationHelper = new NavigationHelper(this);
             this.navigationHelper.LoadState += this.NavigationHelper_LoadState;
             this.navigationHelper.SaveState += this.NavigationHelper_SaveState;
+
+            GroupItems.DataContext = myGroups;
+            InviteItems.DataContext = myInvites;
         }
 
         /// <summary>
@@ -107,5 +114,15 @@ namespace GroupLocator
         }
 
         #endregion
+
+        private void InviteClicked(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+        private void GroupClicked(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
     }
 }

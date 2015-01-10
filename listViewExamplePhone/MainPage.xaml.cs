@@ -25,13 +25,13 @@ namespace GroupLocator
     /// </summary>
     public sealed partial class MainPage : Page 
     {
-        public ObservableCollection<GroupClass> Groups { get; set; }
+        public ObservableCollection<Group> Groups { get; set; }
 
 
         public MainPage()
         {
             this.InitializeComponent();
-            Groups = new ObservableCollection<GroupClass>();
+            Groups = new ObservableCollection<Group>();
             //GroupItems.DataContext = Groups;
             this.NavigationCacheMode = NavigationCacheMode.Required;
             
@@ -56,7 +56,7 @@ namespace GroupLocator
 
         private void AddGroup_Click(object sender, RoutedEventArgs e)
         {
-            GroupClass nGroup = new GroupClass(12, "My family");
+            Group nGroup = new Group(12, "My family");
             Groups.Add(nGroup);
         }
 
@@ -74,8 +74,24 @@ namespace GroupLocator
 
         private void signInButton_Click(object sender, RoutedEventArgs e)
         {
-            Frame.Navigate(typeof(profile));
-
+            bool isEnrolled = false;
+            /*
+             send a request to authenticate (set is enrooled)
+             * 
+             */
+            // authenticate user
+            if (isEnrolled)
+            {
+               // send query to get group IDs and names and invites name and ID
+               // update 
+                StaticUser.emailId = emailId.Text;
+                // Fill user info
+                Frame.Navigate(typeof(profile));
+            }
+            else
+            {
+                Frame.Navigate(typeof(MainPage));
+            }
         }
 
         private void signUpButton_Click(object sender, RoutedEventArgs e)

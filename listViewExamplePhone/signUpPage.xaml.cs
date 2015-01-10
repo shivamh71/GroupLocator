@@ -110,7 +110,15 @@ namespace GroupLocator
 
         private void signUpButton_Click(object sender, RoutedEventArgs e)
         {
-            Frame.Navigate(typeof(profile));
+            bool checkIfExists = true;
+            if (checkIfExists)
+            {
+                Frame.Navigate(typeof(profile));
+            }
+            else
+            {
+
+            }
         }
 
         private void password_PasswordChanged(object sender, RoutedEventArgs e)
