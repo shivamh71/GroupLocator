@@ -1,6 +1,7 @@
 ﻿using GroupLocator.Common;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -113,8 +114,24 @@ namespace GroupLocator
 
         }
 
-        private void addGroupAccept_Click(object sender, RoutedEventArgs e)
+        private async void addGroupAccept_Click(object sender, RoutedEventArgs e)
         {
+            Group g = new Group(groupName.Text);
+            await GlobalVars.groupTable.InsertAsync(g);
+
+            Membership m = new Membership(g.Id, GlobalVars.currentUser.emailId);
+            await GlobalVars.membershipTable.InsertAsync(m);
+
+            String emails = emailIdList.Text;
+            String[] inviteEmails = emails.Split(';');
+            foreach (string email in inviteEmails) 
+            {
+                Invite inv = new Invite(GlobalVars.currentUser.emailId, g.Id, email);
+                await GlobalVars.inviteTable.InsertAsync(inv);
+            }
+
+            Debug.WriteLine("Group Added\n");
+
             Frame.Navigate(typeof(profile));
         }
 

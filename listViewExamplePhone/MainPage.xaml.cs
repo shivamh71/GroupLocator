@@ -18,6 +18,7 @@ using Windows.UI.Xaml.Navigation;
 
 using Microsoft.WindowsAzure.MobileServices;
 using Newtonsoft.Json;
+
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=391641
 
 namespace GroupLocator
@@ -53,15 +54,10 @@ namespace GroupLocator
             // Windows.Phone.UI.Input.HardwareButtons.BackPressed event.
             // If you are using the NavigationHelper provided by some templates,
             // this event is handled for you.
-            
+            GlobalVars.initialize();
         }
 
-        private void AddGroup_Click(object sender, RoutedEventArgs e)
-        {
-            Group nGroup = new Group(12, "My family");
-            Groups.Add(nGroup);
-        }
-
+       
         private void GroupClicked(object sender, SelectionChangedEventArgs e)
         {
             Debug.WriteLine("Selected: {0}", e.AddedItems[0]);
@@ -74,25 +70,30 @@ namespace GroupLocator
 
         }
 
-        private void signInButton_Click(object sender, RoutedEventArgs e)
+        private async void signInButton_Click(object sender, RoutedEventArgs e)
         {
-            bool isEnrolled = false;
-            /*
-             send a request to authenticate (set is enrooled)
-             * 
-             */
-            // authenticate user
-            if (isEnrolled)
+            bool checkIfExists = false;
+
+            GlobalVars.currentUser.emailId = emailId.Text;
+            //GlobalVars.currentUser.password = password.ToString();
+
+            MobileServiceCollection<User, User> items;
+            items = await GlobalVars.userTable
+                .Where(user => user.emailId == emailId.Text && user.password==password.ToString())
+                .ToCollectionAsync();
+
+            if (items.Count() != 0)
             {
-               // send query to get group IDs and names and invites name and ID
-               // update 
-                StaticUser.emailId = emailId.Text;
-                // Fill user info
+                checkIfExists = true;
+            }
+
+            if (checkIfExists)
+            {
                 Frame.Navigate(typeof(profile));
             }
             else
             {
-                Frame.Navigate(typeof(MainPage));
+                Frame.Navigate(typeof(signUpPage));
             }
         }
 

@@ -89,13 +89,16 @@
     <Compile Include="Common\ObservableDictionary.cs" />
     <Compile Include="Common\RelayCommand.cs" />
     <Compile Include="Common\SuspensionManager.cs" />
+    <Compile Include="GlobalVars.cs" />
     <Compile Include="Group.cs" />
     <Compile Include="GroupInfo.xaml.cs">
       <DependentUpon>GroupInfo.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Invite.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Membership.cs" />
     <Compile Include="profile.xaml.cs">
       <DependentUpon>profile.xaml</DependentUpon>
     </Compile>
@@ -109,7 +112,6 @@
     <Compile Include="tracker.xaml.cs">
       <DependentUpon>tracker.xaml</DependentUpon>
     </Compile>
-    <Compile Include="StaticUser.cs" />
     <Compile Include="User.cs" />
   </ItemGroup>
   <ItemGroup>

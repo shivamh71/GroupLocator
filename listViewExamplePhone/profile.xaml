@@ -64,4 +64,9 @@
             </Pivot>
         </Grid>
     </Grid>
+    <Page.BottomAppBar>
+        <CommandBar>
+            <AppBarButton Label="Add" Icon="Add" Click="addGroup_Click"/>
+        </CommandBar>
+    </Page.BottomAppBar>
 </Page>

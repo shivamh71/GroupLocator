@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,18 +9,24 @@ namespace GroupLocator
 {
     public class Group
     {
-        public int GroupId { get; set; }
-        public string GroupName { get; set; }
-        public Group(int GroupId, string gname)
+        public string Id { get; set; }
+
+        [JsonProperty(PropertyName = "groupName")]
+        public string groupName { get; set; }
+        public Group(string gname)
         {
-            this.GroupId = GroupId;
-            this.GroupName = gname;
+            this.groupName = gname;
         }
+
+
+       
 
         public void AddMember(string name)
         {
 
         }
+
+
     }
 }
 

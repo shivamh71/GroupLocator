@@ -1,6 +1,7 @@
 ﻿using GroupLocator.Common;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -110,15 +111,25 @@ namespace GroupLocator
 
         private void signUpButton_Click(object sender, RoutedEventArgs e)
         {
-            bool checkIfExists = true;
+            bool checkIfExists = false;
+
+            GlobalVars.currentUser.emailId = emailId.Text;
+            GlobalVars.currentUser.userName = username.Text;
+            GlobalVars.currentUser.password = password.ToString();
+
+            GlobalVars.currentUser.insertUser();
+
             if (checkIfExists)
             {
                 Frame.Navigate(typeof(profile));
             }
             else
             {
-
+                Frame.Navigate(typeof(profile));
             }
+
+            Debug.WriteLine("Added user");
+
         }
 
         private void password_PasswordChanged(object sender, RoutedEventArgs e)
