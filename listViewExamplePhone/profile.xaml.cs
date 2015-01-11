@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Graphics.Display;
@@ -46,12 +47,14 @@ namespace GroupLocator
             GroupItems.DataContext = myGroups;
             InviteItems.DataContext = myInvites;
 
-            fetchMyGroups();
-            fetchMyInvites();
+            //fetchMyGroups();
+            //fetchMyInvites();
 
         }
 
-        public async void fetchMyGroups()
+      
+
+        public async Task fetchMyGroups()
         {
             MobileServiceCollection<Membership, Membership> items;
             items = await GlobalVars.membershipTable
@@ -68,11 +71,13 @@ namespace GroupLocator
 
         }
 
-        public async void fetchMyInvites()
+
+
+        public async Task fetchMyInvites()
         {
             MobileServiceCollection<Invite, Invite> items;
             items = await GlobalVars.inviteTable
-                .Where(Invite => Invite.receiverEmailId == GlobalVars.currentUser.emailId)
+                .Where(Invite => Invite.receiverEmailId.Trim() == GlobalVars.currentUser.emailId)
                 .ToCollectionAsync();
             foreach (Invite inv in items)
             {
@@ -146,8 +151,10 @@ namespace GroupLocator
         /// </summary>
         /// <param name="e">Provides data for navigation methods and event
         /// handlers that cannot cancel the navigation request.</param>
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
+            await fetchMyGroups();
+            await fetchMyInvites();
             this.navigationHelper.OnNavigatedTo(e);
         }
 
@@ -185,7 +192,7 @@ namespace GroupLocator
             }
             MobileServiceCollection<Invite, Invite> items;
             items = await GlobalVars.inviteTable
-                .Where(Invite => Invite.receiverEmailId == GlobalVars.currentUser.emailId && Invite.senderEmailId == inv.senderEmailId && Invite.groupId == inv.groupId)
+                .Where(Invite => Invite.receiverEmailId.Trim() == GlobalVars.currentUser.emailId && Invite.senderEmailId == inv.senderEmailId && Invite.groupId == inv.groupId)
                 .ToCollectionAsync();
 
             await GlobalVars.inviteTable.DeleteAsync(items[0]);

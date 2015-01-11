@@ -89,7 +89,8 @@ namespace GroupLocator
                 if (items.Count() != 0)
                 {
                     checkIfExists = true;
-                    //GlobalVars.currentUser = items[0];
+                    GlobalVars.currentUser = items[0];
+                    items[0].updateUser();
                 }
 
                 if (checkIfExists)

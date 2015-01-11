@@ -171,7 +171,7 @@ namespace GroupLocator
                     Longitude = 72.8258
                 });
             MapControl1.ZoomLevel = 12;
-            MapControl1.LandmarksVisible = true;
+            MapControl1.LandmarksVisible = false;
             foreach (Member m in myMembers)
             {
                 addPin(m);
