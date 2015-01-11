@@ -34,6 +34,7 @@ namespace GroupLocator
     public sealed partial class tracker : Page
     {
         private NavigationHelper navigationHelper;
+
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
         public ObservableCollection<Member> myMembers = new ObservableCollection<Member>();
 
@@ -47,7 +48,7 @@ namespace GroupLocator
 
             memberList.DataContext = myMembers;
             fetchMyMembers();
-            renderMapView();
+            //renderMapView();
         }
 
         public async void fetchMyMembers()
@@ -66,7 +67,7 @@ namespace GroupLocator
                     .ToCollectionAsync();
 
                 //string location = await FindLocationFromLatLong(userItems[0].latitude, userItems[0].longitude);
-                string location = await FindLocationFromLatLong(19.133725, 72.912817);
+                string location = await FindLocationFromLatLong(userItems[0].latitude, userItems[0].longitude);
                 string timestamp = String.Format("{0:m}", userItems[0].lastSeen);
                 timestamp += ", "+String.Format("{0:t}", userItems[0].lastSeen);
 
@@ -74,6 +75,18 @@ namespace GroupLocator
                     userItems[0].latitude, userItems[0].longitude, timestamp));
             }
 
+            MapControl1.Center =
+                new Geopoint(new BasicGeoposition()
+                {
+                    Latitude = GlobalVars.currentUser.latitude,
+                    Longitude = GlobalVars.currentUser.longitude
+                });
+            MapControl1.ZoomLevel = 12;
+            MapControl1.LandmarksVisible = false;
+            foreach (Member m in myMembers)
+            {
+                addPin(m);
+            } 
         }
 
         /// <summary>
@@ -147,7 +160,7 @@ namespace GroupLocator
 
         #endregion
 
-        private void addPin(Member m)
+        private async void addPin(Member m)
         {
             MapIcon MapIcon1 = new MapIcon();
             MapIcon1.Location = new Geopoint(new BasicGeoposition()
@@ -159,6 +172,10 @@ namespace GroupLocator
             MapIcon1.NormalizedAnchorPoint = new Point(0.5, 1.0);
             MapIcon1.Title = m.userName;
             MapControl1.MapElements.Add(MapIcon1);
+            Windows.UI.Xaml.Shapes.Ellipse fence = new Windows.UI.Xaml.Shapes.Ellipse();
+            MapControl1.Children.Add(fence);
+            MapControl.SetLocation(fence, MapIcon1.Location);
+            await MapControl1.TrySetViewAsync(MapIcon1.Location, 18D, 0, 0, MapAnimationKind.Bow);
         }
 
         private void renderMapView()
@@ -167,8 +184,8 @@ namespace GroupLocator
             MapControl1.Center =
                 new Geopoint(new BasicGeoposition()
                 {
-                    Latitude = 18.9750,
-                    Longitude = 72.8258
+                    Latitude = GlobalVars.currentUser.latitude,
+                    Longitude = GlobalVars.currentUser.longitude
                 });
             MapControl1.ZoomLevel = 12;
             MapControl1.LandmarksVisible = false;

@@ -43,7 +43,7 @@ namespace GroupLocator
         public async void updateUser()
         {
             this.lastSeen = DateTime.Now;
-            this.latitude = 19.133632;
+            this.latitude = 19.133632 ;
             this.longitude = 72.912146;
             await GlobalVars.userTable.UpdateAsync(this);
         }
